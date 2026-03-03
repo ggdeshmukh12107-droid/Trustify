@@ -1,0 +1,10 @@
+/* Component-level overrides */
+#root {
+  width: 100%;
+  min-height: 100vh;
+}
+
+/* Remove default body flex centering from boilerplate */
+body {
+  display: block;
+}
