@@ -66,12 +66,12 @@ function App() {
         <section className="hero">
           <div className="hero-inner">
             <h1 className="hero-title">
-              Fund the<br />
-              <span className="gradient-text">Stellar Future</span>
+              Build Trust on<br />
+              <span className="gradient-text">Stellar</span>
             </h1>
             <p className="hero-sub">
-              Decentralized crowdfunding powered by the Stellar blockchain.
-              Support projects you believe in — transparent, fast, and borderless.
+              A blockchain-based reputation system for freelancers and marketplaces.
+              Earn verified trust scores transparently, fast, and borderless.
             </p>
             <div className="hero-actions">
               {!wallet.isConnected ? (
@@ -80,25 +80,25 @@ function App() {
                 </button>
               ) : (
                 <button id="hero-create-btn" className="btn btn-primary btn-lg" onClick={() => setShowCreate(true)}>
-                  + Launch Campaign
+                  + Create Task
                 </button>
               )}
-              <a href="#campaigns" className="btn btn-outline btn-lg">Explore Projects</a>
+              <a href="#campaigns" className="btn btn-outline btn-lg">Explore Tasks</a>
             </div>
             <div className="hero-stats">
               <div className="hero-stat">
                 <strong>{campaigns.length}</strong>
-                <small>Campaigns</small>
+                <small>Tasks</small>
               </div>
               <div className="hero-stat">
                 <strong>{allDonations.length}</strong>
-                <small>Donations</small>
+                <small>Verifications</small>
               </div>
               <div className="hero-stat">
                 <strong>
                   {campaigns.reduce((s, c) => s + c.raised, 0).toFixed(0)} XLM
                 </strong>
-                <small>Total Raised</small>
+                <small>Trust Points</small>
               </div>
             </div>
           </div>
@@ -108,7 +108,7 @@ function App() {
         {/* Campaigns Grid */}
         <section className="campaigns-section" id="campaigns">
           <div className="section-header">
-            <h2 className="section-title">Active Campaigns</h2>
+            <h2 className="section-title">Active Tasks</h2>
             {isLoading && <LoadingSpinner size="sm" label="Refreshing..." />}
           </div>
           {isLoading && campaigns.length === 0 ? (

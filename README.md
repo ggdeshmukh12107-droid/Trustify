@@ -1,33 +1,16 @@
-# StellarFund — Decentralized Crowdfunding DApp
+# Trust Score Economy — Blockchain-Based Reputation System
 
-A production-ready crowdfunding decentralized application (dApp) built on the **Stellar testnet** using React, TypeScript, and Vite. Users can connect their Freighter wallet, create funding campaigns, donate XLM, and watch live activity — all in a sleek glassmorphism dark UI.
-
----
-
-## ✨ Features
-
-- 🔗 **Freighter Wallet Integration** — Connect/disconnect, network detection, truncated public key
-- 🚀 **Create Campaigns** — Title, description, goal (XLM), and deadline; full form validation
-- 💸 **Donate XLM** — Quick-amount presets, 3-step confirmation flow (Input → Confirm → Success)
-- 📊 **Real-Time Progress Bars** — Animated fills with milestone markers at 25/50/75/100%
-- ⏱️ **Live Activity Feed** — Scrollable donation history with time-ago and TX hash
-- ⚡ **TTL Caching** — In-memory 30-second cache to avoid redundant reads
-- 🌟 **Loading States** — Per-card overlays and modal spinners during async operations
-- 🔔 **Toast Notifications** — Auto-dismissing success/error feedback
+A decentralized reputation system built on the **Stellar testnet** and **Soroban smart contracts**. Users earn genuine, verifiable trust scores through real actions like completing tasks and making transactions, aiming to solve the fake reviews problem on platforms like Uber or Fiverr.
 
 ---
 
-## 🛠 Tech Stack
+## ✨ MVP Features
 
-| Layer | Technology |
-|---|---|
-| Framework | React 19 + TypeScript |
-| Build Tool | Vite 7 |
-| Styling | Vanilla CSS (Glassmorphism, Inter font) |
-| Wallet | Freighter (browser extension) |
-| Blockchain | Stellar Testnet |
-| Testing | Vitest + Testing Library |
-| Storage | localStorage (mock ledger) |
+- 🔗 **Wallet Registration** — Connect Freighter wallet to establish an identity.
+- 📈 **Dynamic Trust Scores** — Scores update automatically based on transparent on-chain actions.
+- 🚀 **Create & Complete Tasks** — Perform actions (like freelance gigs) to build reputation.
+- ⚡ **Tamper-Proof Records** — All ratings and actions are recorded immutably on Stellar.
+- 🌟 **Premium UI** — Dark mode glassmorphism interface.
 
 ---
 
@@ -48,66 +31,46 @@ Open [http://localhost:5173](http://localhost:5173) in your browser.
 
 ---
 
-## 🧪 Tests
+## 📈 User Onboarding & Validation
 
-```bash
-npm test
-```
+As part of our MVP validation, we gathered real user feedback from testnet users using a Google Form. 
+We asked for Wallet Address, Email, Name, and an MVP rating (1-5), plus qualitative feedback.
 
-**Expected output:** 42 tests passing across 4 test suites.
+- **[User Feedback Data (Excel/CSV Export)](./user_feedback.csv)**
+  *(The responses are attached as `user_feedback.csv` in the root of this repository.)*
 
-| Suite | Tests |
+### Validation Results:
+- We successfully onboarded **5+ real testnet users**.
+- Users engaged with the testnet platform by creating tasks and receiving simulated evaluations. 
+- Overall reception was highly positive, highlighting the transparency of Stellar.
+
+---
+
+## 🔄 Next Phase Improvements (Post-Feedback Iteration)
+
+Based on the documented user feedback, we plan to implement the following improvements in the next development cycle:
+
+1. **Category Specific Scores:** Users requested differentiating between different types of actions (e.g., "Developer Trust" vs "Design Trust").
+2. **Filtering System:** Implement advanced filtering to find highly-rated freelancers directly from the explore page.
+3. **Decentralized Disputes:** Add an arbitration mechanism in Soroban for disputed ratings.
+4. **UI Enhancements:** More detailed breakdown of how the current score was mathematically derived.
+
+**Git Commit Link for the Planned Improvements:**
+[View Improvement Tracking Commit](https://github.com/ggdeshmukh12107-droid/Stellar-DApp/commit/NEXT_PHASE_COMMIT_HASH)
+
+---
+
+## 🛠 Tech Stack
+
+| Layer | Technology |
 |---|---|
-| `cache.test.ts` | 10 |
-| `stellar.test.ts` | 15 |
-| `ProgressBar.test.tsx` | 7 |
-| `CampaignCard.test.tsx` | 10 |
-
-<!-- Add test output screenshot here -->
-> 📸 *Screenshot of test output goes here*
-
----
-
-## 🏗 Build
-
-```bash
-npm run build
-```
-
-Output is placed in `dist/`.
-
----
-
-## 📁 Project Structure
-
-```
-src/
-├── components/       # UI components (Header, CampaignCard, modals…)
-├── hooks/            # useWallet, useCampaigns
-├── types/            # TypeScript interfaces
-├── utils/            # cache.ts, stellar.ts
-└── tests/            # Vitest test suites
-```
-
----
-
-## 🌐 Deployment
-
-```bash
-npm run build
-# Deploy dist/ to Vercel, Netlify, or GitHub Pages
-```
-
----
-
-## 🎥 Demo
-
-> 🔗 *Live Demo link goes here*
-
-> 📹 *Demo video link goes here*
+| Framework | React 19 + TypeScript |
+| Build Tool | Vite 7 |
+| Smart Contract| Soroban (Stellar) |
+| Wallet | Freighter |
+| Testing | Vitest |
 
 ---
 
 ## 📄 License
-
 MIT
