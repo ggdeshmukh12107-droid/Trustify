@@ -56,7 +56,7 @@ Based on the documented user feedback, we plan to implement the following improv
 4. **UI Enhancements:** More detailed breakdown of how the current score was mathematically derived.
 
 **Git Commit Link for the Planned Improvements:**
-[View Improvement Tracking Commit](https://github.com/ggdeshmukh12107-droid/Stellar-DApp/commit/NEXT_PHASE_COMMIT_HASH)
+[View Improvement Tracking Commit](https://github.com/ggdeshmukh12107-droid/Stellar-DApp/commit/331d45e)
 
 ---
 
