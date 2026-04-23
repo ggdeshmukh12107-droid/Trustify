@@ -1,6 +1,6 @@
-Timestamp,Name,Email,Wallet Address,Product Feedback (Rate 1-5),Additional Comments
-2026-04-20 10:15:00,Alice Smith,alice@example.com,GABCDE1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890ABCDE,5,Great UI! Tracking trust scores is very clear.
-2026-04-20 11:32:00,Bob Johnson,bob@example.com,GXYZDE1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890ABCDE,4,Good concept. Would love to see more filtering options for freelancers.
-2026-04-21 09:12:00,Charlie Davis,charlie@example.com,GLMNDE1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890ABCDE,5,Trust Score Economy is exactly what the freelance world needs. Secure and transparent.
-2026-04-21 14:45:00,Diana Prince,diana@example.com,GQRXDE1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890ABCDE,4,The Stellar transaction speed is amazing. Need a dark mode though!
-2026-04-22 08:20:00,Evan Wright,evan@example.com,GTYZDE1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890ABCDE,5,Stellar integration makes it so seamless. Keep it up!
+"Timestamp","Name","Email","Wallet Address ","How would you rate the experience?","Any feedback or suggestions for improvement?"
+"2026/04/22 8:53:02 pm GMT+5:30","Aditi","aditidmhaske17@gmail.com","GAWOCI3JKKRFYYUJGOR7I3LZM6BMFCLUBN3EXBNLRISO6XWW3YDSTHDU","5","excellent "
+"2026/04/22 8:57:28 pm GMT+5:30","Gayatri Deshmukh","ggdeshmukh12107@gmail.com","GBQQRG45YXIOLM7UR2W7DN2XP7SZVIDY4D5NWCUMRX7CEXJVVFGU26PB","5","fabulous"
+"2026/04/22 9:07:17 pm GMT+5:30","Janhavi Mane","janhavimane123@gmail.com","GAEXD3KCFE3CBWDGSNQ5A624AMH74B4ONAEEF2QRUWHX6SOTTAVUGKRV","5","Wonderful application"
+"2026/04/22 9:45:02 pm GMT+5:30","Poorva ","poorvam2006@gmail.com","GAOQKOFH6R3FG5TS6SMJO2RHAJJG2F4MMBKFGT4Z3OKHZCO7UA2AOI3E","5","Liked the app, great idea"
+"2026/04/23 7:54:57 pm GMT+5:30","Anurag BIdgar","anuragbidgar18@gmail.com","GAJ23UGXDYDBEBLI5JAE77LFTSQUTWJ6RIGXYAJJILDWWUHNMXEXK3X3","5","all good "

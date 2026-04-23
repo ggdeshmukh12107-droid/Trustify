@@ -6,6 +6,7 @@ interface ProgressBarProps {
     showLabels?: boolean;
     showMilestones?: boolean;
     animated?: boolean;
+    label?: string;
 }
 
 const MILESTONES = [25, 50, 75, 100];
@@ -16,6 +17,7 @@ export function ProgressBar({
     showLabels = true,
     showMilestones = true,
     animated = true,
+    label = 'Progress'
 }: ProgressBarProps) {
     const raw = goal > 0 ? (raised / goal) * 100 : 0;
     const percentage = Math.min(100, Math.max(0, raw));
@@ -30,7 +32,7 @@ export function ProgressBar({
         <div className="progress-bar-container" role="progressbar" aria-valuenow={percentage} aria-valuemin={0} aria-valuemax={100}>
             {showLabels && (
                 <div className="progress-labels">
-                    <span className="progress-raised">{formatXLM(raised)} XLM raised</span>
+                    <span className="progress-raised">{formatXLM(raised)} {label} Verified</span>
                     <span className="progress-pct">{Math.round(percentage)}%</span>
                 </div>
             )}
@@ -50,7 +52,7 @@ export function ProgressBar({
             </div>
             {showLabels && (
                 <div className="progress-goal">
-                    Goal: {formatXLM(goal)} XLM
+                    Target: {formatXLM(goal)} Pts
                 </div>
             )}
         </div>

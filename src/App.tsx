@@ -1,22 +1,23 @@
 import { useState } from 'react';
 import { Header } from './components/Header';
-import { CampaignCard } from './components/CampaignCard';
-import { CreateCampaign } from './components/CreateCampaign';
-import { DonateModal } from './components/DonateModal';
+import { TaskCard } from './components/TaskCard';
+import { CreateTaskModal } from './components/CreateTaskModal';
+import { EndorseModal } from './components/EndorseModal';
 import { ActivityFeed } from './components/ActivityFeed';
+import { UserProfile } from './components/UserProfile';
 import { LoadingSpinner } from './components/LoadingSpinner';
 import { useWallet } from './hooks/useWallet';
-import { useCampaigns } from './hooks/useCampaigns';
-import type { Campaign, CreateCampaignInput, Toast } from './types';
+import { useTrustSystem } from './hooks/useTrustSystem';
+import type { TrustTask, CreateTaskInput, Toast } from './types';
 import { generateId } from './utils/stellar';
 import './App.css';
 
 function App() {
   const wallet = useWallet();
-  const { campaigns, isLoading, createCampaign, donate, allDonations } = useCampaigns();
+  const { tasks, isLoading, createTask, endorseTask, allEndorsements } = useTrustSystem();
   const [showCreate, setShowCreate] = useState(false);
-  const [donatingTo, setDonatingTo] = useState<Campaign | null>(null);
-  const [loadingCampaignId, setLoadingCampaignId] = useState<string | null>(null);
+  const [endorsingTask, setEndorsingTask] = useState<TrustTask | null>(null);
+  const [loadingTaskId, setLoadingTaskId] = useState<string | null>(null);
   const [toasts, setToasts] = useState<Toast[]>([]);
 
   const addToast = (message: string, type: Toast['type'] = 'info') => {
@@ -25,30 +26,32 @@ function App() {
     setTimeout(() => setToasts(prev => prev.filter(t => t.id !== id)), 4000);
   };
 
-  const handleCreateCampaign = async (input: CreateCampaignInput) => {
+  const handleCreateTask = async (input: CreateTaskInput) => {
     try {
-      await createCampaign(input, wallet.publicKey || 'ANONYMOUS');
+      await createTask(input, wallet.publicKey || 'ANONYMOUS');
       setShowCreate(false);
-      addToast('🚀 Campaign created successfully!', 'success');
+      addToast('🚀 Trust Task registered successfully!', 'success');
     } catch {
-      addToast('Failed to create campaign. Please try again.', 'error');
+      addToast('Failed to register task. Please try again.', 'error');
     }
   };
 
-  const handleDonate = async (amount: number) => {
-    if (!donatingTo) return;
-    setLoadingCampaignId(donatingTo.id);
+  const handleEndorse = async (amount: number) => {
+    if (!endorsingTask) return;
+    setLoadingTaskId(endorsingTask.id);
     try {
-      // Pass signTransaction so a real Stellar testnet tx is submitted
-      // (appears in Freighter history). Falls back to demo if it fails.
-      await donate(
-        { campaignId: donatingTo.id, amount },
+      await endorseTask(
+        { taskId: endorsingTask.id, amount },
         wallet.publicKey || 'Anonymous',
         wallet.isConnected ? wallet.signTransaction : undefined
       );
-      addToast(`💫 Donated ${amount} XLM to "${donatingTo.title}"!`, 'success');
+      addToast(`✅ Trust Endorsed! ${amount} XLM recorded on Stellar blockchain.`, 'success');
+      setEndorsingTask(null);
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : 'Transaction failed. Please try again.';
+      addToast(`❌ ${msg}`, 'error');
     } finally {
-      setLoadingCampaignId(null);
+      setLoadingTaskId(null);
     }
   };
 
@@ -58,7 +61,7 @@ function App() {
         walletState={wallet}
         onConnect={wallet.connect}
         onDisconnect={wallet.disconnect}
-        onCreateCampaign={() => setShowCreate(true)}
+        onCreateTask={() => setShowCreate(true)}
       />
 
       <main className="main-content">
@@ -66,69 +69,74 @@ function App() {
         <section className="hero">
           <div className="hero-inner">
             <h1 className="hero-title">
-              Build Trust on<br />
+              Build Verifiable Trust on<br />
               <span className="gradient-text">Stellar</span>
             </h1>
             <p className="hero-sub">
-              A blockchain-based reputation system for freelancers and marketplaces.
-              Earn verified trust scores transparently, fast, and borderless.
+              A blockchain-based reputation protocol for freelancers and marketplaces.
+              Earn permanent trust scores transparently, fast, and borderless.
             </p>
             <div className="hero-actions">
               {!wallet.isConnected ? (
-                <button id="hero-connect-btn" className="btn btn-primary btn-lg" onClick={wallet.connect}>
+                <button id="hero-connect-btn" className="btn btn-primary btn-lg btn-glow" onClick={wallet.connect}>
                   Connect Wallet →
                 </button>
               ) : (
-                <button id="hero-create-btn" className="btn btn-primary btn-lg" onClick={() => setShowCreate(true)}>
-                  + Create Task
+                <button id="hero-create-btn" className="btn btn-primary btn-lg btn-glow" onClick={() => setShowCreate(true)}>
+                  + Request Validation
                 </button>
               )}
-              <a href="#campaigns" className="btn btn-outline btn-lg">Explore Tasks</a>
+              <a href="#tasks" className="btn btn-outline btn-lg">Explore verified tasks</a>
             </div>
             <div className="hero-stats">
               <div className="hero-stat">
-                <strong>{campaigns.length}</strong>
-                <small>Tasks</small>
+                <strong>{tasks.length}</strong>
+                <small>Tasks Completed</small>
               </div>
               <div className="hero-stat">
-                <strong>{allDonations.length}</strong>
-                <small>Verifications</small>
+                <strong>{allEndorsements.length}</strong>
+                <small>Trust Verifications</small>
               </div>
               <div className="hero-stat">
                 <strong>
-                  {campaigns.reduce((s, c) => s + c.raised, 0).toFixed(0)} XLM
+                  {tasks.reduce((s, t) => s + t.trustScore, 0).toFixed(0)} Pts
                 </strong>
-                <small>Trust Points</small>
+                <small>Network Trust Score</small>
               </div>
             </div>
           </div>
           <div className="hero-glow" aria-hidden="true" />
         </section>
 
-        {/* Campaigns Grid */}
-        <section className="campaigns-section" id="campaigns">
+        {/* User Profile — shown only when wallet is connected */}
+        {wallet.isConnected && wallet.publicKey && (
+          <UserProfile publicKey={wallet.publicKey} tasks={tasks} />
+        )}
+
+        {/* Tasks Grid */}
+        <section className="campaigns-section" id="tasks">
           <div className="section-header">
-            <h2 className="section-title">Active Tasks</h2>
-            {isLoading && <LoadingSpinner size="sm" label="Refreshing..." />}
+            <h2 className="section-title">Marketplace Tasks</h2>
+            {isLoading && <LoadingSpinner size="sm" label="Syncing network..." />}
           </div>
-          {isLoading && campaigns.length === 0 ? (
+          {isLoading && tasks.length === 0 ? (
             <div className="full-loader">
-              <LoadingSpinner size="lg" label="Loading campaigns..." />
+              <LoadingSpinner size="lg" label="Loading tasks..." />
             </div>
-          ) : campaigns.length === 0 ? (
+          ) : tasks.length === 0 ? (
             <div className="empty-state">
               <div className="empty-icon">🌟</div>
-              <p>No campaigns yet. Be the first to create one!</p>
+              <p>No tasks registered yet. Be the first to build your reputation!</p>
             </div>
           ) : (
             <div className="campaign-grid">
-              {campaigns.map(c => (
-                <CampaignCard
-                  key={c.id}
-                  campaign={c}
-                  onDonate={setDonatingTo}
+              {tasks.map(t => (
+                <TaskCard
+                  key={t.id}
+                  task={t}
+                  onEndorse={setEndorsingTask}
                   isConnected={wallet.isConnected}
-                  isLoading={loadingCampaignId === c.id}
+                  isLoading={loadingTaskId === t.id}
                 />
               ))}
             </div>
@@ -136,22 +144,22 @@ function App() {
         </section>
 
         {/* Activity Feed */}
-        <ActivityFeed donations={allDonations} />
+        <ActivityFeed endorsements={allEndorsements} />
       </main>
 
       {/* Modals */}
-      <CreateCampaign
+      <CreateTaskModal
         isOpen={showCreate}
         isLoading={isLoading}
         onClose={() => setShowCreate(false)}
-        onSubmit={handleCreateCampaign}
+        onSubmit={handleCreateTask}
       />
-      <DonateModal
-        campaign={donatingTo}
-        isOpen={!!donatingTo}
-        isLoading={loadingCampaignId !== null}
-        onClose={() => setDonatingTo(null)}
-        onDonate={handleDonate}
+      <EndorseModal
+        task={endorsingTask}
+        isOpen={!!endorsingTask}
+        isLoading={loadingTaskId !== null}
+        onClose={() => setEndorsingTask(null)}
+        onEndorse={handleEndorse}
       />
 
       {/* Toast Notifications */}

@@ -1,6 +1,7 @@
 /**
- * Stellar testnet transaction builder for donations.
- * Builds a self-payment with a memo so it appears in Freighter's history.
+ * Stellar testnet transaction builder for trust endorsements.
+ * Calls Freighter to sign, which opens the confirmation popup.
+ * Then submits the signed tx to the Stellar testnet.
  */
 import {
     Horizon,
@@ -21,49 +22,56 @@ export interface DonationTxResult {
 }
 
 /**
- * Build, sign (via Freighter), and submit a real Stellar testnet donation.
+ * Build, sign (via Freighter — opens popup), and submit a Stellar testnet tx.
  *
- * Uses a self-payment of 0.0000001 XLM with a memo recording the donation
- * so it appears in Freighter's transaction history without requiring the
- * campaign creator's account to exist on testnet.
+ * Strategy: send `amount` XLM from the endorser's wallet to themselves
+ * with a memo labelling the trust task. This creates a real on-chain record.
  *
- * @param donor       Donor's Stellar public key
- * @param amount      Donation amount in XLM (recorded in memo)
- * @param campaignTitle  Campaign name (truncated to fit memo)
- * @param signTx      Freighter signTransaction callback
+ * @param endorser    The endorser's Stellar public key
+ * @param amount      Amount of XLM (trust points) to send
+ * @param taskTitle   Task name (used in the tx memo)
+ * @param signTx      Freighter signTransaction callback (opens the popup)
  */
 export async function buildAndSubmitDonationTx(
-    donor: string,
+    endorser: string,
     amount: number,
-    campaignTitle: string,
+    taskTitle: string,
     signTx: (xdr: string) => Promise<string>
 ): Promise<DonationTxResult> {
-    // Load donor account to get current sequence number
-    const account = await server.loadAccount(donor);
+    // Load the account to get the latest sequence number
+    const account = await server.loadAccount(endorser);
 
-    // Build transaction: minimal self-payment + memo describing donation
-    const memoText = `${amount} XLM → ${campaignTitle}`.slice(0, 28); // Stellar memo max 28 bytes
+    // Stellar memo max is 28 bytes
+    const memoText = `Trust: ${taskTitle}`.slice(0, 28);
+
+    // The XLM amount to send — at minimum 0.0000001, but use actual amount if reasonable
+    const xlmAmount = Math.max(0.0000001, Math.min(amount, 100)).toFixed(7);
+
     const tx = new TransactionBuilder(account, {
         fee: BASE_FEE,
         networkPassphrase: Networks.TESTNET,
     })
         .addOperation(
             Operation.payment({
-                destination: donor, // self-payment so no recipient account needed
+                destination: endorser, // Self-payment: safe, no external account needed
                 asset: Asset.native(),
-                amount: '0.0000001', // minimal, just to create a valid tx
+                amount: xlmAmount,
             })
         )
         .addMemo(Memo.text(memoText))
-        .setTimeout(30)
+        .setTimeout(180) // 3 minutes for user to approve in Freighter
         .build();
 
+    // Convert to XDR and send to Freighter for signing
+    // This is what opens the Freighter confirmation popup
     const xdr = tx.toXDR();
-
-    // Sign with Freighter
     const signedXdr = await signTx(xdr);
 
-    // Submit to Stellar testnet
+    if (!signedXdr) {
+        throw new Error('Freighter did not return a signed transaction. Did you approve it?');
+    }
+
+    // Parse the signed XDR and submit to Stellar testnet
     const signedTx = TransactionBuilder.fromXDR(signedXdr, Networks.TESTNET);
     const result = await server.submitTransaction(signedTx);
 
@@ -74,16 +82,20 @@ export async function buildAndSubmitDonationTx(
 }
 
 /**
- * Try to fund a testnet account using Friendbot (only works on testnet).
- * Silent fail — returns false if funding not needed or fails.
+ * Ensure the testnet account is funded via Friendbot.
+ * Only does anything if the account doesn't exist yet.
  */
 export async function ensureFunded(publicKey: string): Promise<boolean> {
     try {
         await server.loadAccount(publicKey);
-        return true; // already exists
+        return true; // Already funded and active
     } catch {
         try {
-            await fetch(`https://friendbot.stellar.org?addr=${publicKey}`);
+            // New account — request testnet XLM from Friendbot
+            const resp = await fetch(`https://friendbot.stellar.org?addr=${encodeURIComponent(publicKey)}`);
+            if (!resp.ok) return false;
+            // Wait a moment for the ledger to close
+            await new Promise(res => setTimeout(res, 3000));
             return true;
         } catch {
             return false;

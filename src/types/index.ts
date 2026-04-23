@@ -1,21 +1,21 @@
-// Core TypeScript interfaces for the Stellar Crowdfunding DApp
+// Core TypeScript interfaces for the Stellar Trust Score Economy DApp
 
-export interface Campaign {
+export interface TrustTask {
     id: string;
     title: string;
     description: string;
-    creator: string; // Stellar public key
-    goal: number; // in XLM
-    raised: number; // in XLM
+    freelancer: string; // Stellar public key
+    targetScore: number; // in XLM
+    trustScore: number; // in XLM
     deadline: number; // Unix timestamp
     createdAt: number; // Unix timestamp
-    donations: Donation[];
+    endorsements: TrustEndorsement[];
 }
 
-export interface Donation {
+export interface TrustEndorsement {
     id: string;
-    campaignId: string;
-    donor: string; // Stellar public key
+    taskId: string;
+    client: string; // Stellar public key
     amount: number; // in XLM
     timestamp: number; // Unix timestamp
     txHash?: string; // Stellar transaction hash
@@ -34,15 +34,15 @@ export interface CacheEntry<T> {
     expiresAt: number; // Unix timestamp ms
 }
 
-export interface CreateCampaignInput {
+export interface CreateTaskInput {
     title: string;
     description: string;
-    goal: number; // in XLM
+    targetScore: number; // in XLM
     deadline: Date;
 }
 
-export interface DonateInput {
-    campaignId: string;
+export interface EndorseInput {
+    taskId: string;
     amount: number; // in XLM
 }
 

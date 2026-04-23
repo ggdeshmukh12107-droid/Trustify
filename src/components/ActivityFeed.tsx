@@ -1,17 +1,17 @@
 import { truncateAddress, formatXLM } from '../utils/stellar';
 
-interface Donation {
+interface TrustEndorsementFeedItem {
     id: string;
-    campaignId: string;
-    donor: string;
+    taskId: string;
+    client: string;
     amount: number;
     timestamp: number;
     txHash?: string;
-    campaignTitle: string;
+    taskTitle: string;
 }
 
 interface ActivityFeedProps {
-    donations: Donation[];
+    endorsements: TrustEndorsementFeedItem[];
 }
 
 function timeAgo(timestamp: number): string {
@@ -25,47 +25,47 @@ function timeAgo(timestamp: number): string {
     return `${Math.floor(hours / 24)}d ago`;
 }
 
-function donorColor(donor: string): string {
+function clientColor(client: string): string {
     const colors = ['#6366f1', '#8b5cf6', '#ec4899', '#f59e0b', '#10b981', '#3b82f6'];
-    const idx = donor.charCodeAt(0) % colors.length;
+    const idx = client.charCodeAt(0) % colors.length;
     return colors[idx];
 }
 
-export function ActivityFeed({ donations }: ActivityFeedProps) {
+export function ActivityFeed({ endorsements }: ActivityFeedProps) {
     return (
         <section className="activity-feed" id="activity">
-            <h2 className="section-title">📡 Live Activity</h2>
-            {donations.length === 0 ? (
-                <div className="empty-feed">No donations yet. Be the first!</div>
+            <h2 className="section-title">📡 Live Trust Verifications</h2>
+            {endorsements.length === 0 ? (
+                <div className="empty-feed">No trust endorsements yet. Be the first to verify a task!</div>
             ) : (
                 <ul className="feed-list">
-                    {donations.map((d, i) => (
+                    {endorsements.map((e, i) => (
                         <li
-                            key={d.id}
+                            key={e.id}
                             className="feed-item"
                             style={{ animationDelay: `${i * 60}ms` }}
                         >
                             <div
                                 className="feed-avatar"
-                                style={{ background: `linear-gradient(135deg, ${donorColor(d.donor)}, ${donorColor(d.donor + '1')})` }}
+                                style={{ background: `linear-gradient(135deg, ${clientColor(e.client)}, ${clientColor(e.client + '1')})` }}
                                 aria-hidden="true"
                             >
-                                {d.donor.charAt(0)}
+                                {e.client.charAt(0)}
                             </div>
                             <div className="feed-content">
                                 <div className="feed-donor">
-                                    <span className="donor-name">{truncateAddress(d.donor, 4)}</span>
-                                    <span className="feed-amount">+{formatXLM(d.amount)} XLM</span>
+                                    <span className="donor-name">{truncateAddress(e.client, 4)} verified</span>
+                                    <span className="feed-amount">+{formatXLM(e.amount)} Pts</span>
                                 </div>
-                                <div className="feed-campaign">→ {d.campaignTitle}</div>
-                                {d.txHash && (
-                                    <div className="feed-tx" title={d.txHash}>
-                                        TX: {truncateAddress(d.txHash, 6)}
+                                <div className="feed-campaign">→ {e.taskTitle}</div>
+                                {e.txHash && (
+                                    <div className="feed-tx" title={e.txHash}>
+                                        TX: {truncateAddress(e.txHash, 6)}
                                     </div>
                                 )}
                             </div>
-                            <time className="feed-time" dateTime={new Date(d.timestamp).toISOString()}>
-                                {timeAgo(d.timestamp)}
+                            <time className="feed-time" dateTime={new Date(e.timestamp).toISOString()}>
+                                {timeAgo(e.timestamp)}
                             </time>
                         </li>
                     ))}
