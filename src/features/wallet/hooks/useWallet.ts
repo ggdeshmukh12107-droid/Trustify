@@ -6,7 +6,7 @@ import {
     signTransaction as freighterSignTransaction,
     isConnected as checkIsConnected
 } from '@stellar/freighter-api';
-import type { WalletState } from '../types';
+import type { WalletState } from '../../../types';
 
 const TESTNET_PASSPHRASE = 'Test SDF Network ; September 2015';
 

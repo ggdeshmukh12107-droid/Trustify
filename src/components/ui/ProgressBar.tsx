@@ -1,4 +1,4 @@
-import { formatXLM } from '../utils/stellar';
+import { formatXLM } from '../../utils/stellar';
 
 interface ProgressBarProps {
     raised: number;

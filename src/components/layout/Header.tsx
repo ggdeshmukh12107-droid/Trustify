@@ -1,5 +1,5 @@
-import { WalletConnect } from './WalletConnect';
-import type { WalletState } from '../types';
+import { WalletConnect } from '../../features/wallet/components/WalletConnect';
+import type { WalletState } from '../../types';
 
 interface HeaderProps {
     walletState: WalletState;

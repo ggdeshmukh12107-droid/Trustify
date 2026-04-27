@@ -1,6 +1,6 @@
-import { truncateAddress } from '../utils/stellar';
-import { LoadingSpinner } from './LoadingSpinner';
-import type { WalletState } from '../types';
+import { truncateAddress } from '../../../utils/stellar';
+import { LoadingSpinner } from '../../../components/ui/LoadingSpinner';
+import type { WalletState } from '../../../types';
 
 interface WalletConnectProps {
     walletState: WalletState;

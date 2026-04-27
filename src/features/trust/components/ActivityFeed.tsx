@@ -1,4 +1,4 @@
-import { truncateAddress, formatXLM } from '../utils/stellar';
+import { truncateAddress, formatXLM } from '../../../utils/stellar';
 
 interface TrustEndorsementFeedItem {
     id: string;
