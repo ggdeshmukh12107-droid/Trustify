@@ -149,6 +149,7 @@ Based on collected user feedback, the following improvements are planned for the
 ### 1. 📊 Score Breakdown Transparency
 **Feedback:** "Score system unclear — I don't know how my score changed."
 **Improvement:** Added an in-app **Scoring Rulebook** showing exactly what each action is worth (+10 for tasks, +5 for transactions, etc.)
+**Implemented in Commit:** [e9a38f4](https://github.com/ggdeshmukh12107-droid/Trustify/commit/e9a38f4)
 
 ### 2. 🔍 Category-Specific Scores
 **Feedback:** "Would love to see separate scores for different skills (Design, Dev, etc.)"
